@@ -24,11 +24,11 @@ point4, = ax.plot(0,0, marker="o")
 point5, = ax.plot(0,0, marker="o")
 
 
-deg = 10
+deg = 0
 base = plt.gca().transData
 rot = transforms.Affine2D().rotate_deg(deg)
 rot2 = transforms.Affine2D().rotate_deg(deg+90)
-line, = ax.plot([10,-10], [0,0],'r--', transform = rot + base )
+line, = ax.plot([10,-10], [0,0],'r--')
 line2, = ax.plot([10,-10], [0,0],'r--', transform = rot2 + base )
 
 
@@ -41,13 +41,13 @@ def update(phi):
     else:
         print(int(Angle))
 
-    line.set_data([10,-10],[-x,-x])
-    line2.set_data([10,-10],[-y,-y])
+    line.set_data([20,-20],[y,y])
+    line2.set_data([20,-20],[-x,-x])
     point.set_data([0],[y])
     point2.set_data([x],[0])
     point3.set_data([x],[y])
-    point4.set_data([y],[y])
-    point5.set_data([x],[x])
+    point4.set_data([-x],[y])
+    # point5.set_data([x],[x])
 
     
     return point, point2, point3, point4, point5, line, line2
