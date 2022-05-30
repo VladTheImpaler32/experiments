@@ -24,13 +24,19 @@ point4, = ax.plot(0,0, marker="o")
 point5, = ax.plot(0,0, marker="o")
 
 
-deg = 0
+deg = 150
 base = plt.gca().transData
-rot = transforms.Affine2D().rotate_deg(deg)
-rot2 = transforms.Affine2D().rotate_deg(deg+90)
+rot = transforms.Affine2D().rotate_deg(deg-120)
+rot2 = transforms.Affine2D().rotate_deg(deg)
+rot3 = transforms.Affine2D().rotate_deg(deg+(deg*2))
+rottest = transforms.Affine2D().rotate_deg(120)
+rottest2 = transforms.Affine2D().rotate_deg(60)
 line, = ax.plot([10,-10], [0,0],'r--')
-line2, = ax.plot([10,-10], [0,0],'r--', transform = rot2 + base )
-
+line2, = ax.plot([10,-10], [0,0],'r--', transform = rot + base )
+line3, = ax.plot([10,-10], [0,0],'r--', transform = rot2 + base )
+line4, = ax.plot([10,-10], [0,0],'r--', transform = rot3 + base )
+point4, = ax.plot(0,0, marker="o", transform = rottest + base)
+point5, = ax.plot(0,0, marker="o",transform = rottest2 + base)
 
 def update(phi): 
     x,y = circle(phi)
@@ -42,15 +48,17 @@ def update(phi):
         print(int(Angle))
 
     line.set_data([20,-20],[y,y])
-    line2.set_data([20,-20],[-x,-x])
+    line2.set_data([20,-20],[0,0])
+    line3.set_data([20,-20],[0,0])
+    line4.set_data([20,-20],[0,0])
     point.set_data([0],[y])
-    point2.set_data([x],[0])
+    # point2.set_data([x],[0])
     point3.set_data([x],[y])
-    point4.set_data([-x],[y])
-    # point5.set_data([x],[x])
+    point4.set_data([0],[-x])
+    point5.set_data([0],[-x])
 
     
-    return point, point2, point3, point4, point5, line, line2
+    return point, point2, point3, point4, point5, line, line2, line3, line4
 
 # create animation with 10ms interval, which is repeated,
 # provide the full circle (0,2pi) as parameters
