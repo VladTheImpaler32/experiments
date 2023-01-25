@@ -1,0 +1,10 @@
+/* center the canvas on the page vertically and horizontally */
+canvas {
+  display: block;
+  margin: 0 auto;
+  margin-top: 50px;
+  border: 1px solid rgb(255, 255, 255);
+}
+body {
+    background-color: black;
+}
