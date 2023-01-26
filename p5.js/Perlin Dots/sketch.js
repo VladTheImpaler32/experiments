@@ -4,6 +4,7 @@ let toggle = false;
 function setup() {
   canvas = createCanvas(800, 800);
   canvas.mouseClicked(click);
+  createP('Click canvas to pause.');
 }
 
 function draw() {
