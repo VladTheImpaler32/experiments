@@ -1,15 +1,5 @@
 ## One place to keep my adhd induced ideas, projects, and experiments 
-
-
-
 ### p5.js
-A collection of random p5.js creations and ideas. Curious about physics simulations and generative art. See them [here](https://vladtheimpaler32.github.io/experiments/p5.js/)
-
-### matplotlib
-trying to make a visual representation of sin and cos with python, realized there was a way easier way than I was trying to do it, and gave up 
-
-### opencv 
-a weeks worth of playing around with random opencv concepts and trying different things
-
-### esp8266
-really nothing, just a file needed for the opencv turret
+A collection of random p5.js creations and ideas. Curious about physics simulations and generative art. Read about how each one works in the README within the p5js folder. See them [here](https://vladtheimpaler32.github.io/experiments/p5.js/) 
+### OpenCV 
+About a weeks worth of playing around with random opencv concepts and trying different things.
