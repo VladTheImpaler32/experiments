@@ -12,3 +12,5 @@ Using Perlin noise to gradually change the rotation and translation of a grid of
 Heavily inspired by [this](https://www.reddit.com/r/creativecoding/comments/elttu8/visualizing_bubble_sort/) reddit post. Generates an array of random numbers, sorts them with either bubble sort, insertion sort, or selection sort, visualizes them with corresponding points which are connected using curveVertex. Color generation dependent on which position it is in the array.
 ### Circular Noise
 Inspired by The Coding Train's video on [Perlin Noise GIF Loops.](https://youtu.be/c6K-wJQ77yQ) Not meant to be more than a reference for future projects that need perfectly looping noise. Uses Perlin noise generated from the sin and cos of chosen value to create noise that starts and ends at the same place. Will definitely be useful for upcoming projects.
+### Brightness Map
+Uses the input from the webcam, converts the rgb values to one brightness value by averaging all of the colors. Then using the brightness value it selects a ascii character from an array depending on its brightness and draws it on the canvas.
