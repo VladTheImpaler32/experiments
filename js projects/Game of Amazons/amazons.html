@@ -28,7 +28,6 @@
         const cellSize = canvas.width / cellNum;
         let playerB = [];
         let playerW = [];
-        let clicked = false;
 
         class player {
             constructor(x, y, color) {
@@ -56,7 +55,6 @@
             move(x, y) {
                 this.x = x; 
                 this.y = y;
-                console.log(this.isValidMove(x, y));
             }
 
             isValidMove(x, y) {
@@ -72,11 +70,22 @@
                     return false;
                 }
             }
+
+            drawMoves() {
+                for(let i = 0; i < cellNum; i++) {
+                    for(let j = 0; j < cellNum; j++) {
+                        if (this.isValidMove(i, j)) {
+                            ctx.fillStyle = 'rgba(0, 255, 0, 0.5)';
+                            ctx.fillRect(i * cellSize, j * cellSize, cellSize, cellSize);
+                        }
+                    }
+                }
+            }
         }
 
         function setup() {
             drawBoard();
-            drawPlayers();
+            spawnPlayers();
 
             loop();
         }
@@ -95,7 +104,7 @@
             ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
         }
 
-        function drawPlayers() {
+        function spawnPlayers() {
             playerB.push(new player(0, 3, '#0000ff'));
             playerB.push(new player(3, 0, '#0000ff'));
             playerB.push(new player(6, 0, '#0000ff'));
@@ -110,7 +119,6 @@
         canvas.addEventListener('click', (e) => {
             const x = Math.floor(e.offsetX / cellSize);
             const y = Math.floor(e.offsetY / cellSize);
-            clicked = !clicked;
 
             playerB.forEach(player => {
                 if (player.x === x && player.y === y) {
@@ -118,7 +126,7 @@
                         player.selected = false;
                     } else if (!player.selected) {
                         player.selected = true;
-                        this.prev = {x: player.x, y: player.y};
+                        player.prev = {x: player.x, y: player.y};
                     }
                 }
             });
@@ -129,7 +137,7 @@
                         player.selected = false;
                     } else {
                         player.selected = true;
-                        this.prev = {x: player.x, y: player.y};
+                        player.prev = {x: player.x, y: player.y};
                     }
                 }
             });
@@ -155,10 +163,16 @@
         function loop() {
             drawBoard();
             playerB.forEach(player => {
+                if (player.selected) {
+                    player.drawMoves();
+                }
                 player.draw();
             });
 
             playerW.forEach(player => {
+                if (player.selected) {
+                    player.drawMoves();
+                }
                 player.draw();
             });
 
