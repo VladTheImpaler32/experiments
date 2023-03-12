@@ -4,4 +4,4 @@ A collection of random p5.js creations and ideas. Curious about physics simulati
 ### OpenCV 
 About a weeks worth of playing around with random opencv concepts and trying different things.
 ### Game Of Amazons
-A vanilla javascript version of the Game of Amazons. Eventually will be multiplayer and maybe have a bot to play against too. See it [Here.](https://vladtheimpaler32.github.io/experiments/js%20projects/Game%20of%20Amazons/amazons.html)
+A vanilla javascript version of the Game of Amazons. Eventually will be multiplayer and maybe have a bot to play against. See it [Here.](https://vladtheimpaler32.github.io/experiments/js%20projects/Game%20of%20Amazons/amazons.html)
