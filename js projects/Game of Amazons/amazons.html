@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game of Amazons</title>
+    <style>
+        body {
+            width: 100vw;
+            height: 100vh;
+            background-color: #222222;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+        }
+    </style>
+</head>
+<body onload="setup();">
+    <canvas id="canvas"></canvas>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = 800;
+        canvas.height = 800;
+        const cellNum = 10;
+        const cellSize = canvas.width / cellNum;
+        let playerB = [];
+        let playerW = [];
+        let clicked = false;
+
+        class player {
+            constructor(x, y, color) {
+                this.x = x;
+                this.y = y;
+                this.prev = {x: x, y: y};
+                this.color = color;
+                this.selected = false;
+            }
+
+            draw() {
+                ctx.beginPath();
+                if (this.selected) {
+                    const r = parseInt(this.color.slice(1, 3), 16);
+                    const g = parseInt(this.color.slice(3, 5), 16);
+                    const b = parseInt(this.color.slice(5, 7), 16);
+                    ctx.fillStyle = `rgb(${r + 70}, ${g + 70}, ${b + 70})`;
+                } else {
+                    ctx.fillStyle = this.color;
+                }
+                ctx.arc(this.x * cellSize + cellSize / 2, this.y * cellSize + cellSize / 2, cellSize / 2, 0, 2 * Math.PI);
+                ctx.fill();
+            }
+
+            move(x, y) {
+                this.x = x; 
+                this.y = y;
+                console.log(this.isValidMove(x, y));
+            }
+
+            isValidMove(x, y) {
+                if (this.prev.x === x && this.prev.y === y) {
+                    return false;
+                }
+                
+                const dx = Math.abs(this.prev.x - x);
+                const dy = Math.abs(this.prev.y - y);
+                if (dx === dy || this.prev.x === x || this.prev.y === y) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        }
+
+        function setup() {
+            drawBoard();
+            drawPlayers();
+
+            loop();
+        }
+
+        function drawBoard() {
+            for (let i = 0; i < cellNum; i++) {
+                for (let j = 0; j < cellNum; j++) {
+                    ctx.fillStyle = (i + j) % 2 === 0 ? '#ffffff' : '#000000';
+                    ctx.fillRect(i * cellSize, j * cellSize, cellSize, cellSize);
+                }
+            }
+        }
+
+        function drawCell(x, y) {
+            ctx.fillStyle = (x + y) % 2 === 0 ? '#ffffff' : '#000000';
+            ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
+        }
+
+        function drawPlayers() {
+            playerB.push(new player(0, 3, '#0000ff'));
+            playerB.push(new player(3, 0, '#0000ff'));
+            playerB.push(new player(6, 0, '#0000ff'));
+            playerB.push(new player(9, 3, '#0000ff'));
+
+            playerW.push(new player(0, 6, '#ff0000'));
+            playerW.push(new player(3, 9, '#ff0000'));
+            playerW.push(new player(6, 9, '#ff0000'));
+            playerW.push(new player(9, 6, '#ff0000'));
+        }
+
+        canvas.addEventListener('click', (e) => {
+            const x = Math.floor(e.offsetX / cellSize);
+            const y = Math.floor(e.offsetY / cellSize);
+            clicked = !clicked;
+
+            playerB.forEach(player => {
+                if (player.x === x && player.y === y) {
+                    if (player.selected && player.isValidMove(x, y)) {
+                        player.selected = false;
+                    } else if (!player.selected) {
+                        player.selected = true;
+                        this.prev = {x: player.x, y: player.y};
+                    }
+                }
+            });
+
+            playerW.forEach(player => {
+                if (player.x === x && player.y === y) {
+                    if (player.selected && player.isValidMove(x, y)) {
+                        player.selected = false;
+                    } else {
+                        player.selected = true;
+                        this.prev = {x: player.x, y: player.y};
+                    }
+                }
+            });
+        });
+
+        canvas.addEventListener('mousemove', (e) => {
+            const x = Math.floor(e.offsetX / cellSize);
+            const y = Math.floor(e.offsetY / cellSize);
+
+            playerB.forEach(player => {
+                if (player.selected) {
+                    player.move(x, y);
+                }
+            });
+
+            playerW.forEach(player => {
+                if (player.selected) {
+                    player.move(x, y);
+                }
+            });
+        });
+
+        function loop() {
+            drawBoard();
+            playerB.forEach(player => {
+                player.draw();
+            });
+
+            playerW.forEach(player => {
+                player.draw();
+            });
+
+            requestAnimationFrame(loop);
+        }
+    </script>
+</body>
+</html>
