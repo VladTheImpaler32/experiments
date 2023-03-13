@@ -15,11 +15,6 @@
             align-items: center;
             margin: 0;
         }
-        @media screen and (max-width: 600px) {
-            canvas {
-                width: 90%;
-            }
-        }
     </style>
 </head>
 <body onload="setup();">
@@ -80,7 +75,7 @@
                 for(let i = 0; i < cellNum; i++) {
                     for(let j = 0; j < cellNum; j++) {
                         if (this.isValidMove(i, j)) {
-                            ctx.fillStyle = 'rgba(0, 255, 0, 0.5)';
+                            ctx.fillStyle = 'rgba(0, 255, 0, 0.3)';
                             ctx.fillRect(i * cellSize, j * cellSize, cellSize, cellSize);
                         }
                     }
@@ -140,7 +135,7 @@
                 if (player.x === x && player.y === y) {
                     if (player.selected && player.isValidMove(x, y)) {
                         player.selected = false;
-                    } else {
+                    } else if (!player.selected){
                         player.selected = true;
                         player.prev = {x: player.x, y: player.y};
                     }
