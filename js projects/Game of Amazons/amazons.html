@@ -28,6 +28,7 @@
         const cellSize = canvas.width / cellNum;
         let playerB = [];
         let playerW = [];
+        let somethingSelected = false;
 
         class player {
             constructor(x, y, color) {
@@ -58,6 +59,18 @@
             }
 
             isValidMove(x, y) {
+                playerB.forEach(player => {
+                    if (player.x === x && player.y === y) {
+                        console.log('falseb')
+                        return false;
+                    }
+                });
+                playerW.forEach(player => {
+                    if (player.x === x && player.y === y) {
+                        console.log('falsew')
+                        return false;
+                    }
+                });
                 if (this.prev.x === x && this.prev.y === y) {
                     return false;
                 }
@@ -122,10 +135,13 @@
 
             playerB.forEach(player => {
                 if (player.x === x && player.y === y) {
-                    if (player.selected && player.isValidMove(x, y)) {
+                    console.log(player.isValidMove(x, y));
+                    if (player.selected && player.isValidMove(x, y) && somethingSelected) {
                         player.selected = false;
-                    } else if (!player.selected) {
+                        somethingSelected = false;
+                    } else if (!player.selected && !somethingSelected) {
                         player.selected = true;
+                        somethingSelected = true;
                         player.prev = {x: player.x, y: player.y};
                     }
                 }
@@ -133,10 +149,12 @@
 
             playerW.forEach(player => {
                 if (player.x === x && player.y === y) {
-                    if (player.selected && player.isValidMove(x, y)) {
+                    if (player.selected && player.isValidMove(x, y) && somethingSelected) {
                         player.selected = false;
-                    } else if (!player.selected){
+                        somethingSelected = false;
+                    } else if (!player.selected && !somethingSelected) {
                         player.selected = true;
+                        somethingSelected = true;
                         player.prev = {x: player.x, y: player.y};
                     }
                 }
@@ -164,14 +182,14 @@
             drawBoard();
             playerB.forEach(player => {
                 if (player.selected) {
-                    player.drawMoves();
+                    // player.drawMoves();
                 }
                 player.draw();
             });
 
             playerW.forEach(player => {
                 if (player.selected) {
-                    player.drawMoves();
+                    // player.drawMoves();
                 }
                 player.draw();
             });
