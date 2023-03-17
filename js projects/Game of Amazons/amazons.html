@@ -58,19 +58,17 @@
                 this.y = y;
             }
 
+            isPlayerHere(x, y) {
+                if (playerB.some(player => player.x === x && player.y === y && !player.selected)) {
+                    return false;
+                } else if (playerW.some(player => player.x === x && player.y === y && !player.selected)) {
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+
             isValidMove(x, y) {
-                playerB.forEach(player => {
-                    if (player.x === x && player.y === y) {
-                        console.log('falseb')
-                        return false;
-                    }
-                });
-                playerW.forEach(player => {
-                    if (player.x === x && player.y === y) {
-                        console.log('falsew')
-                        return false;
-                    }
-                });
                 if (this.prev.x === x && this.prev.y === y) {
                     return false;
                 }
@@ -135,8 +133,8 @@
 
             playerB.forEach(player => {
                 if (player.x === x && player.y === y) {
-                    console.log(player.isValidMove(x, y));
-                    if (player.selected && player.isValidMove(x, y) && somethingSelected) {
+                    console.log(player.isValidMove(x, y), player.isPlayerHere(x, y));
+                    if (player.selected && player.isValidMove(x, y) && somethingSelected && player.isPlayerHere(x, y)) {
                         player.selected = false;
                         somethingSelected = false;
                     } else if (!player.selected && !somethingSelected) {
@@ -149,7 +147,7 @@
 
             playerW.forEach(player => {
                 if (player.x === x && player.y === y) {
-                    if (player.selected && player.isValidMove(x, y) && somethingSelected) {
+                    if (player.selected && player.isValidMove(x, y) && somethingSelected && player.isPlayerHere(x, y)) {
                         player.selected = false;
                         somethingSelected = false;
                     } else if (!player.selected && !somethingSelected) {
