@@ -14,3 +14,5 @@ Heavily inspired by [this](https://www.reddit.com/r/creativecoding/comments/eltt
 Inspired by The Coding Train's video on [Perlin Noise GIF Loops.](https://youtu.be/c6K-wJQ77yQ) Not meant to be more than a reference for future projects that need perfectly looping noise. Uses Perlin noise generated from the sin and cos of chosen value to create noise that starts and ends at the same place. Will definitely be useful for upcoming projects.
 ### Brightness Mirror
 Uses the input from the webcam, converts the rgb values to one brightness value by averaging all of the colors. Then using the brightness value it selects a ascii character from an array depending on its brightness and draws it on the canvas.
+### Double Pendulum
+Something that I've wanted to do for a while is code a double pendulum or a "chaotic" pendulum, I just never knew where to start. I watched [The Coding Train's video](https://youtu.be/uWzPe_S-RVE) and used that as a jumping off point. The equation is from [this website](https://www.myphysicslab.com/pendulum/double-pendulum-en.html) which is a great example.  
