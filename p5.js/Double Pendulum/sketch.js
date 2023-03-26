@@ -4,8 +4,8 @@ function setup() {
   createCanvas(800, 800);
   stroke(255);
   strokeWeight(2);
+  frameRate(144);
 
-  
   trail = createGraphics(width, height);
   trail.translate(width/2, height/2);
   trail.stroke(255);
@@ -15,7 +15,7 @@ function setup() {
       x: 0,
       y: 0,
       len: 200,
-      mass: 0.05,
+      mass: 0.005,
       ang: PI,
       vel: 0,
       accel: 0
@@ -25,12 +25,12 @@ function setup() {
       x: 0,
       y: 0,
       len: 200,
-      mass: 0.05,
+      mass: 0.005,
       ang: PI+0.001,
       vel: 0,
       accel: 0
     }
-    g = 1;
+    g = 0.5;
 }
 
 function draw() {
