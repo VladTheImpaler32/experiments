@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multiplayer Pong</title>
+    <script src="https://cdn.socket.io/4.6.0/socket.io.min.js" integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+" crossorigin="anonymous"></script>
+</head>
+<body onload="{checkBrowser();update();}">
+    <canvas id="myCanvas" width="500px" height="500px"></canvas>
+  
+    <script>
+      let socket;
+      let canvas = document.getElementById('myCanvas');
+      let ctx = canvas.getContext("2d");
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      let primaries = [];
+      let key = [];
+      let speed = 1;
+  
+      let block0 = {
+          x: Math.random()*canvas.width,
+          y: Math.random()*canvas.height,
+          xSpeed: 0,
+          ySpeed: 0,
+          radius: 10
+      };
+  
+      socket = io();
+  
+      class player {
+      constructor(x, y, radius, id) {
+          this.x = x;
+          this.y = y;
+          this.radius = radius;
+          this.id = id;
+      }
+      draw() {
+          ctx.beginPath();
+          ctx.fillStyle = 'white';
+          ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI, true);
+          ctx.fill(); 
+          ctx.closePath();
+      }
+      collision() {
+          if (this.x < 0){
+              this.x = canvas.width;
+          } 
+          if (this.x > canvas.width){
+              this.x = 0
+          }  
+          if (this.y < 0){
+              this.y = canvas.height;
+          } 
+          if (this.y > canvas.height){
+              this.y = 0
+          } 
+      }
+  }
+      
+  window.addEventListener('keydown', function (e) {
+      key = (key || []);
+      key[e.keyCode] = (e.type == "keydown");
+  })
+  window.addEventListener('keyup', function (e) {
+      key[e.keyCode] = (e.type == "keydown");
+  })
+  
+  function draw0() {
+      ctx.beginPath();
+      ctx.fillStyle = 'white';
+      ctx.arc(block0.x, block0.y, block0.radius, 0, 2 * Math.PI, true);
+      ctx.fill(); 
+      block0.x += block0.xSpeed
+      block0.y += block0.ySpeed
+  }
+  
+  function collision0() {
+      if (block0.x < 0){
+          block0.x = canvas.width;
+      } 
+      if (block0.x > canvas.width){
+          block0.x = 0
+      }  
+      if (block0.y < 0){
+          block0.y = canvas.height;
+      } 
+      if (block0.y > canvas.height){
+          block0.y = 0
+      } 
+  }
+  
+  function updatePrimaries(users) {
+      users.forEach(user => {
+          primaries.forEach(primary => {
+              if (primary.id === user.id) {
+                  primary.x = user.x;
+                  primary.y = user.y;
+              }
+          });
+      });
+  }
+  
+  function newUser(users) {
+      users.forEach(user => {
+          primaries.push(new player(user.x, user.y, user.color, user.r, 1, user.id));
+      });
+  
+  }
+  
+  function removeUser(users) {
+      console.log(users, primaries);
+      if (users.length !== primaries.length) {
+          primaries = [];
+          users.forEach(user => {
+              primaries.push(new player(user.x, user.y, user.color, user.r, 1, user.id));
+          });
+      }
+  }
+  
+  socket.on('move', updatePrimaries);
+  socket.on('newUser', newUser);
+  socket.on('lostUser', removeUser);
+  socket.on('full' , function() {
+      alert('Server is full, please try again later');
+  });
+  
+  function update() {
+      const myTimeout = setTimeout(() => {
+          ctx.fillStyle = 'rgba(0, 0, 0, 1)';
+          ctx.fillRect(-canvas.width, -canvas.height, canvas.width*2, canvas.height*2);
+  
+          block0.xSpeed = 0;
+          block0.ySpeed = 0;
+          if (key && key[65]) {block0.xSpeed = -1 * speed; }
+          if (key && key[68]) {block0.xSpeed = speed; }
+          if (key && key[87]) {block0.ySpeed = -1 * speed; }
+          if (key && key[83]) {block0.ySpeed = speed; };
+  
+  
+          let data = {x:block0.x, y:block0.y, r:block0.radius, id:socket.id};
+          console.log(data);
+          socket.emit('move', data);
+  
+          collision0();
+          draw0();
+          
+          primaries.forEach(primary => {
+              if (primary.id !== socket.id) {
+                  primary.draw();
+              }
+              primary.collision();
+          });
+  
+          update();   
+      }, 1)}
+  
+  
+  
+  
+  function checkBrowser() {
+      // Get the user-agent string
+      let userAgentString = 
+          navigator.userAgent;
+  
+      // Detect Chrome
+      let chromeAgent = 
+          userAgentString.indexOf("Chrome") > -1;
+  
+      // Detect Internet Explorer
+      let IExplorerAgent = 
+          userAgentString.indexOf("MSIE") > -1 || 
+          userAgentString.indexOf("rv:") > -1;
+  
+      // Detect Firefox
+      let firefoxAgent = 
+          userAgentString.indexOf("Firefox") > -1;
+  
+      isChrome = chromeAgent;
+  
+      isExplorer = IExplorerAgent;
+  
+      isFirefox = firefoxAgent;
+  
+      if (isFirefox) {speed = 3.3}
+  }
+  </script>
+  </body>
+  
+  </html>
