@@ -6,6 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Multiplayer Pong</title>
     <script src="https://cdn.socket.io/4.6.0/socket.io.min.js" integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+" crossorigin="anonymous"></script>
+    <style>
+        body {
+            background-color: rgb(69, 69, 69);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+    </style>
 </head>
 <body onload="{checkBrowser();update();}">
     <canvas id="myCanvas" width="500px" height="500px"></canvas>
@@ -14,48 +22,37 @@
       let socket;
       let canvas = document.getElementById('myCanvas');
       let ctx = canvas.getContext("2d");
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+      canvas.width = 900;
+      canvas.height = 450;
       let primaries = [];
       let key = [];
       let speed = 1;
   
       let block0 = {
-          x: Math.random()*canvas.width,
-          y: Math.random()*canvas.height,
+          x: 0,
+          y: canvas.height/2,
           xSpeed: 0,
           ySpeed: 0,
-          radius: 10
       };
   
       socket = io();
   
       class player {
-      constructor(x, y, radius, id) {
+      constructor(x, y, id) {
           this.x = x;
           this.y = y;
-          this.radius = radius;
           this.id = id;
       }
       draw() {
-          ctx.beginPath();
-          ctx.fillStyle = 'white';
-          ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI, true);
-          ctx.fill(); 
-          ctx.closePath();
+          ctx.fillStyle = '#FF0000';
+          ctx.fillRect(this.x, this.y-50, 20, 100);
       }
-      collision() {
-          if (this.x < 0){
-              this.x = canvas.width;
+      collision() {  
+          if (this.y < 50){
+              this.y = 50;
           } 
-          if (this.x > canvas.width){
-              this.x = 0
-          }  
-          if (this.y < 0){
-              this.y = canvas.height;
-          } 
-          if (this.y > canvas.height){
-              this.y = 0
+          if (this.y > canvas.height-50){
+              this.y = canvas.height-50
           } 
       }
   }
@@ -69,26 +66,18 @@
   })
   
   function draw0() {
-      ctx.beginPath();
       ctx.fillStyle = 'white';
-      ctx.arc(block0.x, block0.y, block0.radius, 0, 2 * Math.PI, true);
-      ctx.fill(); 
+      ctx.fillRect(block0.x, block0.y-50, 20, 100);
       block0.x += block0.xSpeed
       block0.y += block0.ySpeed
   }
   
   function collision0() {
-      if (block0.x < 0){
-          block0.x = canvas.width;
+      if (block0.y < 50){
+          block0.y = 50;
       } 
-      if (block0.x > canvas.width){
-          block0.x = 0
-      }  
-      if (block0.y < 0){
-          block0.y = canvas.height;
-      } 
-      if (block0.y > canvas.height){
-          block0.y = 0
+      if (block0.y > canvas.height-50){
+          block0.y = canvas.height-50
       } 
   }
   
@@ -104,18 +93,24 @@
   }
   
   function newUser(users) {
+    console.log(users);
       users.forEach(user => {
-          primaries.push(new player(user.x, user.y, user.color, user.r, 1, user.id));
+          primaries.push(new player(user.x, user.y, user.id));
+          block0 = {
+            x: (primaries.length == 2 ? 50 : canvas.width-90),
+            y: canvas.height/2,
+            xSpeed: 0,
+            ySpeed: 0,
+          };
       });
   
   }
   
   function removeUser(users) {
-      console.log(users, primaries);
       if (users.length !== primaries.length) {
           primaries = [];
           users.forEach(user => {
-              primaries.push(new player(user.x, user.y, user.color, user.r, 1, user.id));
+              primaries.push(new player(user.x, user.y, user.id));
           });
       }
   }
@@ -134,14 +129,11 @@
   
           block0.xSpeed = 0;
           block0.ySpeed = 0;
-          if (key && key[65]) {block0.xSpeed = -1 * speed; }
-          if (key && key[68]) {block0.xSpeed = speed; }
           if (key && key[87]) {block0.ySpeed = -1 * speed; }
           if (key && key[83]) {block0.ySpeed = speed; };
   
   
-          let data = {x:block0.x, y:block0.y, r:block0.radius, id:socket.id};
-          console.log(data);
+          let data = {x:block0.x, y:block0.y, id:socket.id};
           socket.emit('move', data);
   
           collision0();
