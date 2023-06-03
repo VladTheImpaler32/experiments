@@ -36,6 +36,12 @@ io.sockets.on('connection', function (socket) {
     console.log(users);
     io.emit('newUser', users);
 
+    if (users.length == 2) {
+        let rand = Math.random();
+        io.emit('start', rand);
+        console.log("STARTING GAME");
+    }
+
 	socket.on('move', moveMsg);
 	function moveMsg(data) {
         for (let i = 0; i < users.length; i++) {
